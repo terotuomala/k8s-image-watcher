@@ -1,0 +1,43 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+metadata:
+  name: k8s-image-watcher
+
+build:
+  artifacts:
+    - image: k8s-image-watcher
+      ko:
+        fromImage: cgr.dev/chainguard/static
+        dependencies:
+          paths:
+            - cmd
+            - go.mod
+            - pkg
+  
+deploy:
+  helm:
+    releases:
+      - name: k8s-image-watcher
+        chartPath: helm
+        namespace: k8s-image-watcher
+        createNamespace: true
+        recreatePods: true
+        skipBuildDependencies: false
+        useHelmSecrets: false
+        wait: false
+        setValueTemplates:
+          image.repository: "{{.IMAGE_REPO_k8s_image_watcher}}"
+          image.tag: "{{.IMAGE_TAG_k8s_image_watcher}}@{{.IMAGE_DIGEST_k8s_image_watcher}}"
+
+profiles:
+- name: dev
+  activation:
+  - command: dev
+  patches:
+  - op: add
+    path: /build/artifacts/0/ko/fromImage
+    value: gcr.io/distroless/base-debian11:debug
+
+
+
+        

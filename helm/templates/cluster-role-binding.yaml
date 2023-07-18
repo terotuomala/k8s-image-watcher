@@ -1,0 +1,16 @@
+{{- if empty .Values.watch.namespace }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "k8s-image-watcher.fullname" . }}
+  labels:
+    {{- include "k8s-image-watcher.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "k8s-image-watcher.fullname" . }}
+subjects:
+- kind: ServiceAccount
+  name: {{ include "k8s-image-watcher.serviceAccountName" . }}
+  namespace: {{ .Release.Namespace }}
+{{- end }}

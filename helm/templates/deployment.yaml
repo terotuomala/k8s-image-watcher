@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "k8s-image-watcher.fullname" . }}
+  labels:
+    {{- include "k8s-image-watcher.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "k8s-image-watcher.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "k8s-image-watcher.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "k8s-image-watcher.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args: ["watch"]
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: LOG_LEVEL
+              value: "{{ .Values.logging.level }}"
+            - name: NAMESPACE
+              value: "{{ .Values.watch.namespace }}"
+            - name: WATCH_DEPLOYMENT
+              value: "{{ .Values.watch.deployment }}"
+            - name: WATCH_DAEMONSET
+              value: "{{ .Values.watch.daemonset }}"
+            - name: WATCH_STATEFULSET
+              value: "{{ .Values.watch.statefulset }}"
+            - name: SLACK_CHANNEL
+              value: "{{ .Values.slack.channel }}"
+            - name: SLACK_MESSAGE_TITLE
+              value: "{{ .Values.slack.messageTitle }}"
+            - name: SLACK_TOKEN
+              value: "{{ .Values.slack.token }}"
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

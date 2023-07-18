@@ -1,0 +1,28 @@
+{{- if empty .Values.watch.namespace }}
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "k8s-image-watcher.fullname" . }}
+  labels:
+    {{- include "k8s-image-watcher.labels" . | nindent 4 }}
+rules:
+  - apiGroups: ["apps"]
+    {{- if and .Values.watch.deployment (not .Values.watch.daemonset) (not .Values.watch.statefulset) }}
+    resources: ["deployments"]
+    {{- else if and (not .Values.watch.deployment) .Values.watch.daemonset (not .Values.watch.statefulset) }}
+    resources: ["daemonsets"]
+    {{- else if and (not .Values.watch.deployment) (not .Values.watch.daemonset) .Values.watch.statefulset }}
+    resources: ["statefulsets"]
+    {{- else if and (not .Values.watch.deployment) .Values.watch.daemonset .Values.watch.statefulset }}
+    resources: ["daemonsets", "statefulsets"]
+    {{- else if and .Values.watch.deployment (not .Values.watch.daemonset) .Values.watch.statefulset }}
+    resources: ["deployments", "statefulsets"]
+    {{- else if and .Values.watch.deployment .Values.watch.daemonset (not .Values.watch.statefulset) }}
+    resources: ["deployments", "daemonsets"]
+    {{- else if and .Values.watch.deployment .Values.watch.daemonset .Values.watch.statefulset }}
+    resources: ["deployments", "daemonsets", "statefulsets"]
+    {{- else if and (not .Values.watch.deployment) (not .Values.watch.daemonset) (not .Values.watch.statefulset) }}
+    resources: [""]
+    {{- end }}
+    verbs: ["get", "list", "watch"]
+{{- end }}
