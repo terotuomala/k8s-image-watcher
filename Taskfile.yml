@@ -7,27 +7,21 @@ tasks:
   dependencies:
     desc: Install dependencies
     cmds:
-      - go mod tidy
-  
-  build:
-    desc: Build the application using skaffold
-    cmds:
-      - skaffold build --file-output {{.ARTIFACT_FILE}}
-      - skaffold render --build-artifacts {{.ARTIFACT_FILE}} --digest-source none --offline --output out.yaml
-  
+      - go mod tid
+
   dev:
     desc: Run the application in dev mode using skaffold
     cmds:
       - skaffold dev --profile dev --cleanup=false --status-check=false
   
   deploy:
-    desc: Run the application in dev mode using skaffold
+    desc: Deploy the application using skaffold
     deps:
       - build
     cmds:
-      - skaffold deploy --build-artifacts={{.ARTIFACT_FILE}} --status-check=true
+      - skaffold deploy --status-check=true
 
-  template:
+  generate-manifests:
     desc: Generate helm template using values.yaml
     cmds:
-      - helm template k8s-image-watcher ./helm > manifests.yaml
+      - helm template k8s-image-watcher ./charts > k8s-image-watcher-template.yaml
