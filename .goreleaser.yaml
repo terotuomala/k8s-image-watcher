@@ -29,7 +29,6 @@ kos:
     - '{{.Tag}}'
     - latest
     bare: true
-    sbom: spdx
     preserve_import_paths: false
     platforms:
     - linux/amd64
