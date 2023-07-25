@@ -35,15 +35,16 @@ kos:
     - linux/amd64
     - linux/arm64
 
-docker_signs:
-  - cmd: cosign
-    env:
-    - COSIGN_EXPERIMENTAL=1
-    args:
-    - 'sign'
-    - '${artifact}'
-    - "--yes" # needed on cosign 2.0.0+
-    artifacts: manifests
+# docker_signs:
+#   - cmd: cosign
+#     env:
+#     - COSIGN_EXPERIMENTAL=1
+#     args:
+#     - 'sign'
+#     - '${artifact}'
+#     - "--yes" # needed on cosign 2.0.0+
+#     artifacts: manifests
+#     output: true
 
 changelog:
   sort: asc

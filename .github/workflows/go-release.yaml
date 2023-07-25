@@ -6,14 +6,15 @@ on:
     tags:
       - '*'
 
-permissions:
-   contents: write # needed to write releases
-   packages: write
-   id-token: write # needed for keyless signing
-
 jobs:
   goreleaser:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write # needed to write releases
+      packages: write
+      id-token: write # needed for keyless signing
+      
     steps:
       - name: Checkout
         uses: actions/checkout@v3
