@@ -2,8 +2,6 @@ module github.com/terotuomala/k8s-image-watcher
 
 go 1.21
 
-toolchain go1.21.5
-
 require (
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.8.0
