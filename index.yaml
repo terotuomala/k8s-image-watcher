@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  k8s-image-watcher:
+  - apiVersion: v2
+    appVersion: 0.0.8
+    created: "2024-02-24T16:45:22.741358103Z"
+    description: A Helm chart for Kubernetes
+    digest: a20a764f31b47fa39df75f5e78b9c2abc4a564ec4b51c1415d48a4e0b17ca318
+    name: k8s-image-watcher
+    type: application
+    urls:
+    - https://github.com/terotuomala/k8s-image-watcher/releases/download/k8s-image-watcher-0.2.0/k8s-image-watcher-0.2.0.tgz
+    version: 0.2.0
+generated: "2024-02-24T16:45:22.741369825Z"
