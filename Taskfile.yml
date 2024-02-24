@@ -7,7 +7,7 @@ tasks:
   dependencies:
     desc: Install dependencies
     cmds:
-      - go mod tid
+      - go mod tidy
 
   dev:
     desc: Run the application in dev mode using skaffold
