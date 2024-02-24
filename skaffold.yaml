@@ -18,7 +18,7 @@ deploy:
   helm:
     releases:
       - name: k8s-image-watcher
-        chartPath: charts
+        chartPath: charts/k8s-image-watcher
         namespace: k8s-image-watcher
         createNamespace: true
         recreatePods: true
