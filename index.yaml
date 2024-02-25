@@ -2,6 +2,16 @@ apiVersion: v1
 entries:
   k8s-image-watcher:
   - apiVersion: v2
+    appVersion: 0.0.10
+    created: "2024-02-25T08:43:24.675062096Z"
+    description: A Helm chart for installing k8s-image-watcher
+    digest: 28048b15359903471769bbba941a6374074c834d1b72a14413365898019dd342
+    name: k8s-image-watcher
+    type: application
+    urls:
+    - https://github.com/terotuomala/k8s-image-watcher/releases/download/k8s-image-watcher-0.3.0/k8s-image-watcher-0.3.0.tgz
+    version: 0.3.0
+  - apiVersion: v2
     appVersion: 0.0.8
     created: "2024-02-24T16:45:22.741358103Z"
     description: A Helm chart for Kubernetes
@@ -11,4 +21,4 @@ entries:
     urls:
     - https://github.com/terotuomala/k8s-image-watcher/releases/download/k8s-image-watcher-0.2.0/k8s-image-watcher-0.2.0.tgz
     version: 0.2.0
-generated: "2024-02-24T16:45:22.741369825Z"
+generated: "2024-02-25T08:43:24.675074169Z"
