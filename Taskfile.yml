@@ -4,7 +4,7 @@ vars:
   ARTIFACT_FILE: "artifacts.json" 
   
 tasks:
-  dependencies:
+  deps:
     desc: Install dependencies
     cmds:
       - go mod tidy
@@ -16,12 +16,10 @@ tasks:
   
   deploy:
     desc: Deploy the application using skaffold
-    deps:
-      - build
     cmds:
       - skaffold deploy --status-check=true
 
   generate-manifests:
     desc: Generate helm template using values.yaml
     cmds:
-      - helm template k8s-image-watcher ./charts > k8s-image-watcher-template.yaml
+      - helm template k8s-image-watcher ./charts/k8s-image-watcher > k8s-image-watcher-template.yaml
