@@ -40,7 +40,7 @@ watch:
   namespace: ""
   deployment: true
   daemonset: false
-  statefulset: true
+  statefulset: false
 
 slack:
   enabled: false
