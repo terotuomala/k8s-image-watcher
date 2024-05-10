@@ -18,6 +18,7 @@ import (
 
 	"github.com/terotuomala/k8s-image-watcher/pkg/client"
 	"github.com/terotuomala/k8s-image-watcher/pkg/config"
+	slack "github.com/terotuomala/k8s-image-watcher/pkg/handler"
 )
 
 const (
@@ -30,9 +31,10 @@ type Controller struct {
 	kubeClient   kubernetes.Interface
 	informer     cache.SharedIndexInformer
 	resourceType string
+	slackClient  *slack.SlackNotifier
 }
 
-func Create(conf *config.Config) {
+func Create(conf *config.Config, slackClient *slack.SlackNotifier) {
 	kubeClient := client.GetClient()
 
 	if conf.Resource.Deployment {
@@ -56,7 +58,7 @@ func Create(conf *config.Config) {
 			cache.Indexers{},
 		)
 
-		c := addNewEventHandler(kubeClient, deploymentInformer, deployment)
+		c := addNewEventHandler(kubeClient, deploymentInformer, deployment, slackClient)
 		stopCh := make(chan struct{})
 		defer close(stopCh)
 
@@ -78,7 +80,7 @@ func Create(conf *config.Config) {
 			cache.Indexers{},
 		)
 
-		c := addNewEventHandler(kubeClient, daemonsetInformer, daemonset)
+		c := addNewEventHandler(kubeClient, daemonsetInformer, daemonset, slackClient)
 		stopCh := make(chan struct{})
 		defer close(stopCh)
 
@@ -100,7 +102,7 @@ func Create(conf *config.Config) {
 			cache.Indexers{},
 		)
 
-		c := addNewEventHandler(kubeClient, statefulsetInformer, statefulset)
+		c := addNewEventHandler(kubeClient, statefulsetInformer, statefulset, slackClient)
 		stopCh := make(chan struct{})
 		defer close(stopCh)
 
@@ -113,7 +115,7 @@ func Create(conf *config.Config) {
 	<-sigterm
 }
 
-func addNewEventHandler(client kubernetes.Interface, informer cache.SharedIndexInformer, resourceType string) *Controller {
+func addNewEventHandler(client kubernetes.Interface, informer cache.SharedIndexInformer, resourceType string, slackClient *slack.SlackNotifier) *Controller {
 	informer.AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
 			switch resourceType {
@@ -144,6 +146,12 @@ func addNewEventHandler(client kubernetes.Interface, informer cache.SharedIndexI
 
 				if hasImageChanged(oldImage, newImage) {
 					log.WithFields(log.Fields{"pkg": "contoller.go"}).Infof("%s: %s/%s image updated from %s to %s", resourceType, oldResourceObject.GetNamespace(), oldResourceObject.Name, oldImage, newImage)
+					if slackClient != nil {
+						message := fmt.Sprintf("%s: %s/%s image updated from %s to %s", resourceType, oldResourceObject.GetNamespace(), oldResourceObject.Name, oldImage, newImage)
+						if err := slackClient.SendMessage(message); err != nil {
+							log.Errorf("Failed to send notification to Slack: %v", err)
+						}
+					}
 				}
 
 			case daemonset:
@@ -190,6 +198,7 @@ func addNewEventHandler(client kubernetes.Interface, informer cache.SharedIndexI
 		kubeClient:   client,
 		informer:     informer,
 		resourceType: resourceType,
+		slackClient:  slackClient,
 	}
 }
 

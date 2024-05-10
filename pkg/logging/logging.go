@@ -5,10 +5,10 @@ import (
 	"github.com/terotuomala/k8s-image-watcher/pkg/config"
 )
 
-func InitLogging(conf *config.Config) {
+func InitLogging(conf *config.Logging) {
 	log.SetFormatter(&log.TextFormatter{})
 
-	switch conf.Logging.Level {
+	switch conf.Level {
 	case "debug":
 		log.SetLevel(log.DebugLevel)
 	case "info":
@@ -22,6 +22,6 @@ func InitLogging(conf *config.Config) {
 	case "":
 		log.SetLevel(log.InfoLevel)
 	default:
-		log.Fatal("Invalid logging level: ", conf.Logging.Level)
+		log.Fatal("Invalid logging level: ", conf.Level)
 	}
 }
