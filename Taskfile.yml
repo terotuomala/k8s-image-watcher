@@ -1,11 +1,16 @@
 version: '3'
 
 vars:
-  ARTIFACT_FILE: "artifacts.json" 
+  CLUSTER_NAME: k3s-local
   
 tasks:
+  tools:
+    desc: Install tools for local development (k3d, skaffold)
+    cmds:
+      - brew install k3d skaffold
+
   deps:
-    desc: Install dependencies
+    desc: Install go dependencies
     cmds:
       - go mod tidy
 
@@ -22,4 +27,23 @@ tasks:
   generate-manifests:
     desc: Generate helm template using values.yaml
     cmds:
-      - helm template k8s-image-watcher ./charts/k8s-image-watcher > k8s-image-watcher-template.yaml
+      - helm template k8s-image-watcher ./charts/k8s-image-watcher > k8s-image-watcher-manifests.yaml
+
+  create-k3s-cluster:
+    desc: Create a local k3s cluster
+    preconditions:
+      - sh: command -v k3d
+        msg: K3d is required but it's not installed. Aborting.
+    cmds:
+      - >-
+        k3d cluster create "{{.CLUSTER_NAME}}"
+        --servers 1
+        --agents {{.CLI_ARGS | default "0"}}
+        --k3s-arg '--disable=traefik@server:0'
+        --no-lb
+        --wait
+  
+  delete-k3s-cluster:
+    desc: Delete the local k3s cluster
+    cmds:
+      - k3d cluster delete "{{.CLUSTER_NAME}}"
