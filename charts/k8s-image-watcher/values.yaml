@@ -10,22 +10,9 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
-nameOverride: ""
-fullnameOverride: ""
-
 podAnnotations: {}
 
-podSecurityContext:
-  fsGroup: 1001
-
-securityContext:
-  capabilities:
-    drop:
-    - ALL
-  allowPrivilegeEscalation: false
-  readOnlyRootFilesystem: true
-  runAsNonRoot: true
-  runAsUser: 1001
+securityContext: {}
 
 resources:
   limits:
@@ -57,6 +44,5 @@ watch:
 
 slack:
   enabled: false
-  channel: "#test-slack-channel"
-  messageTitle: "test-message-title"
-  token: "xxx-xxx"
+  channel: ""
+  messageTitle: ""

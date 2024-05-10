@@ -1,6 +1,3 @@
-/*
-Copyright © 2023 Tero Tuomala
-*/
 package cmd
 
 import (

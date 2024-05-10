@@ -4,15 +4,14 @@ metadata:
   name: k8s-image-watcher
 
 build:
+  platforms: ["linux/amd64"]
   artifacts:
     - image: k8s-image-watcher
       ko:
         fromImage: cgr.dev/chainguard/static
         dependencies:
-          paths:
-            - cmd
-            - go.mod
-            - pkg
+          paths: ["**/**/*.go"]
+          ignore: []
   
 deploy:
   helm:
@@ -28,6 +27,10 @@ deploy:
         setValueTemplates:
           image.repository: "{{.IMAGE_REPO_k8s_image_watcher}}"
           image.tag: "{{.IMAGE_TAG_k8s_image_watcher}}@{{.IMAGE_DIGEST_k8s_image_watcher}}"
+        setValues:
+          slack.enabled: false
+          slack.channel: "#testing"
+          slack.messageTitle: "k8s-image-watcher"
 
 profiles:
 - name: dev

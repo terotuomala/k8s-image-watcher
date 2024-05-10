@@ -21,10 +21,11 @@ type Logging struct {
 }
 
 type Config struct {
-	Handler   Handler  `json:"handler"`
-	Resource  Resource `json:"resource"`
-	Logging   Logging  `json:"logging"`
-	Namespace string   `json:"namespace,omitempty"`
+	Handler      Handler  `json:"handler"`
+	Resource     Resource `json:"resource"`
+	Logging      Logging  `json:"logging"`
+	Namespace    string   `json:"namespace,omitempty"`
+	SlackEnabled bool     `json:"slack_enabled"`
 }
 
 func New() *Config {
