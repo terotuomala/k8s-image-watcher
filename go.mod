@@ -1,14 +1,14 @@
 module github.com/terotuomala/k8s-image-watcher
 
 go 1.22.0
-toolchain go1.23.4
+toolchain go1.24.1
 
 require (
 	github.com/sirupsen/logrus v1.9.3
 	github.com/slack-go/slack v0.16.0
 	github.com/spf13/cobra v1.8.1
 	k8s.io/api v0.32.0
-	k8s.io/apimachinery v0.32.0
+	k8s.io/apimachinery v0.32.3
 	k8s.io/client-go v0.32.0
 )
 
